@@ -1,0 +1,4 @@
+[submodule "TCoreLib.JS"]
+	path = TCoreLib.JS
+	url = https://github.com/Tectone23/TCoreLib.JS
+	branch = next
