@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { Client } from "../TCoreLib.JS/src/index";
+  import { Client } from "tcore.js";
 
   let firstName = "";
 
   let submitted = false;
 
-  const tcore = new Client("http://192.168.2.33:8080");
+  const tcore = new Client();
 
   let tcoreLoaded = false;
   tcore.InitRest().then(() => (tcoreLoaded = true));
@@ -53,11 +53,21 @@
     </form>
   {:else}
     <h1>Demo profile created</h1>
-    <a href="/">sign in with this profile here</a>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <span on:click={() => (submitted = false)} class="link"
+      >go back to change the name</span
+    >
   {/if}
 </main>
 
 <style>
+  .link {
+    color: lightseagreen;
+    font-size: 1rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
   main {
     display: grid;
     place-items: center;
