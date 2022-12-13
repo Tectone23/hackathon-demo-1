@@ -7,13 +7,10 @@
 
   const tcore = new Client();
 
-  let tcoreLoaded = false;
-  tcore.InitRest().then(() => (tcoreLoaded = true));
-
   const submit = async (e: Event) => {
     e.preventDefault();
 
-    if (tcoreLoaded && firstName !== "") {
+    if (firstName !== "") {
       try {
         tcore.sendRequest({
           hook: "name",
@@ -33,31 +30,37 @@
 </script>
 
 <main>
-  {#if !submitted}
-    <!-- form from https://codepen.io/atunnecliffe/pen/gpKzQw 💖 -->
-    <form on:submit={submit}>
-      <input
-        type="text"
-        name="name"
-        class="question"
-        id="name"
-        required
-        autocomplete="off"
-        bind:value={firstName}
-      />
-      <label for="name"><span>What's your name?</span></label>
+  {#await tcore.InitRest()}
+    <p>trying to connect to tcore</p>
+  {:then} <!-- main code -->
+    {#if !submitted}
+      <!-- form from https://codepen.io/atunnecliffe/pen/gpKzQw 💖 -->
+      <form on:submit={submit}>
+        <input
+          type="text"
+          name="name"
+          class="question"
+          id="name"
+          required
+          autocomplete="off"
+          bind:value={firstName}
+        />
+        <label for="name"><span>What's your name?</span></label>
 
-      {#if firstName !== ""}
-        <input type="submit" value="Submit!" />
-      {/if}
-    </form>
-  {:else}
-    <h1>Demo profile created</h1>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span on:click={() => (submitted = false)} class="link"
-      >go back to change the name</span
-    >
-  {/if}
+        {#if firstName !== ""}
+          <input type="submit" value="Submit!" />
+        {/if}
+      </form>
+    {:else}
+      <h1>Demo profile created</h1>
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <span on:click={() => (submitted = false)} class="link"
+        >go back to change the name</span
+      >
+    {/if}
+  {:catch}
+    <h2>Error connecting to TCore. Make sure TCore service is enabled</h2>
+  {/await}
 </main>
 
 <style>
